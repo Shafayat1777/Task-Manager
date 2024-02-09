@@ -1,21 +1,77 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
+from .models import Task
+from .forms import TaskForm
+from django.views.generic.list import ListView
+from django.views.generic.detail import DetailView
+from django.views.generic.edit import CreateView, UpdateView, DeleteView, FormView
+from django.urls import reverse_lazy
 
+from django.contrib.auth.views import LoginView
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth  import login
 # Create your views here.
 
-data = [
-    {'id': 1, 'title': 'read book', 'description': 'Read a nice book', 'priority':'Low', 'due_date': '1/1/2023', 'completed': 'Completed', 'created_at': '1/1/2023', 'updated_at': '1/1/2023'},
-    {'id': 2, 'title': 'Cook food', 'description': 'Cook a nice lunch', 'priority':'Medium', 'due_date': '1/1/2023', 'completed': 'Remaining', 'created_at': '1/1/2023', 'updated_at': '1/1/2023'},
-    {'id': 3, 'title': 'Go to gym', 'description': 'Fitness for the body', 'priority':'High', 'due_date': '1/1/2023', 'completed': 'Completed', 'created_at': '1/1/2023', 'updated_at': '1/1/2023'},
-    {'id': 4, 'title': 'Code', 'description': 'Always gotta code', 'priority':'Low', 'due_date': '1/1/2023', 'completed': 'Remaining', 'created_at': '1/1/2023', 'updated_at': '1/1/2023'},
-]
+class Login(LoginView):
+    template_name = 'tasks/login.html'
+    fields = '__all__'
+    redirect_authenticated_user = True
 
-def home(request):
-    return render(request, 'tasks/home.html', {'data': data})
+    def get_success_url(self):
+        return reverse_lazy('tasks')
 
-def tasks(request, pk):
-    task = None
-    for i in data:
-        if i['id'] == int(pk):
-            task=i
+class Register(FormView):
+    template_name = 'tasks/register.html'
+    form_class = UserCreationForm
+    redirect_authenticated_user = True
+    success_url = reverse_lazy('tasks')
+
+    def form_valid(self, form):
+        user = form.save()
+        if user is not None:
+            login(self.request, user)
+        return super(Register, self).form_valid(form)
     
-    return render(request, 'tasks/tasks.html', {'data': task})
+    def get(self, *args, **kwargs):
+        if self.request.user.is_authenticated:
+            return redirect('tasks')
+        return super(Register, self).get(*args, **kwargs)
+
+class TaskList(LoginRequiredMixin, ListView):
+    model = Task
+    context_object_name = 'tasks'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['tasks'] = context['tasks'].filter(user=self.request.user)
+
+        search_input = self.request.GET.get('search') or ''
+        if search_input:
+            context['tasks'] = context['tasks'].filter(title__startswith=search_input)
+        
+        context['search_input'] = search_input
+        return context
+
+class TaskDetail(LoginRequiredMixin, DetailView):
+    model = Task
+    context_object_name = 'task'
+
+class TaskCreate(LoginRequiredMixin, CreateView):
+    model = Task
+    fields = ['title', 'description', 'priority', 'due_date']
+    success_url = reverse_lazy('tasks')
+
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super(TaskCreate, self).form_valid(form)
+    
+
+class TaskUpdate(LoginRequiredMixin, UpdateView):
+    model = Task
+    fields = ['title', 'description', 'priority', 'due_date', 'is_complete']
+    success_url = reverse_lazy('tasks')
+
+class TaskDelete(LoginRequiredMixin, DeleteView):
+    model = Task
+    context_object_name = 'task'
+    success_url = reverse_lazy('tasks')

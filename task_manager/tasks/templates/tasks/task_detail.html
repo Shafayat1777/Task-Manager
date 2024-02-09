@@ -1,0 +1,5 @@
+{% extends 'main.html' %} {% block content %}
+<h1>Tasks - {{task.title}}</h1>
+<a href="{% url 'update-task' task.id %}" class="border p-1"> Edit</a>
+<a href="{% url 'delete-task' task.id %}" class="border p-1"> Delete</a>
+{% endblock %}

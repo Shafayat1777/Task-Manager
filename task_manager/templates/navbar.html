@@ -1,21 +1,28 @@
-<nav class="px-28 py-10 ">
+<nav class="px-28 py-10">
   <div
     class="border rounded-md shadow px-10 py-5 bg-slate-100 flex justify-center"
   >
     <a
       href="/"
-      class=" px-4 py-2 rounded-full bg-green-200 hover:bg-green-300 text-gray-600 text-lg font-bold mr-10 shadow"
+      class="px-4 py-2 rounded-full bg-green-200 hover:bg-green-300 text-gray-600 text-lg font-bold mr-10 shadow"
       >Home</a
     >
+    {% if not request.user.is_authenticated %}
+    </form>
     <a
-      href=""
+      href="{% url 'login'%}"
       class="border px-4 py-2 rounded-full hover:bg-green-200 text-gray-600 text-lg font-bold mr-10"
       >Log in</a
     >
-    <a
-      href=""
+    {% else %}
+    <form method="post" action="{% url 'logout' %}">
+      {% csrf_token %}
+    <input
+    type="submit"
+      href="{% url 'logout'%}"
       class="border px-4 py-2 rounded-full hover:bg-green-200 text-gray-600 text-lg font-bold mr-10"
-      >Log out</a
-    >
+      value="Logout"
+      >
+    </form>{% endif %}
   </div>
 </nav>
