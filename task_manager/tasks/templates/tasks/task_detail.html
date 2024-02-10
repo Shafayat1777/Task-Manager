@@ -1,0 +1,35 @@
+{% extends 'main.html' %} {% block content %}
+<div class="border bg-slate-100 rounded-md shadow p-5 mt-10">
+  <div class="flex justify-between">
+    <h1 class="text-2xl font-semibold text-gray-600">{{task.title}}</h1>
+    <div>
+      <h1 class="text-gray-400">Created at: {{task.created}}</h1>
+      <h1 class="text-gray-400">Due: {{task.due_date}}</h1>
+    </div>
+  </div>
+
+  <p class="font-semibold text-gray-500 mt-5">{{task.description}}</p>
+
+  <div class="flex flex-wrap gap-2 mt-5 mb-10">
+    {% for image in images %}
+    <img
+      src="{{ image.image.url }}"
+      alt="Image"
+      class="w-full sm:w-52 border-4 border-green-400"
+    />
+    {% endfor %}
+  </div>
+  <a
+    href="{% url 'update-task' task.id %}"
+    class="border p-2 rounded-md hover:bg-green-200 font-semibold text-gray-600 bg-white"
+  >
+    Edit</a
+  >
+  <a
+    href="{% url 'delete-task' task.id %}"
+    class="border p-2 rounded-md hover:bg-red-200 font-semibold text-gray-600 bg-white"
+  >
+    Delete</a
+  >
+</div>
+{% endblock %}
