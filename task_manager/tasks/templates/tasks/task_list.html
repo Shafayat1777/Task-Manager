@@ -1,44 +1,54 @@
 {% extends 'main.html' %} {% block content %} 
 {% if request.user.is_authenticated %}
-<p>Loged in {{request.user}}</p>
+<p class="py-5 text-lg font-semibold">Loged in as {{request.user | title}} <span class="text-green-400">&#9679;</span></p>
 {% else %}
-
+<p>Not Loged in </p>
 {% endif %}
-<div class="px-28 border">
-  <a href="{% url 'create-task' %}" class="border p-1 hover:bg-slate-100">
-    add task
-  </a>
-  <div class="grid grid-cols-3 gap-4">
-    <div class="border">
-      <form method="GET" action="">
-        <input type="text" placeholder="search title..." name="search" value="{{search_input}}"/>
-        <input type="submit" value="Search" class="border p-2 hover:bg-slate-100 cursor-pointer"/>
+<div >
+  
+  <div class="grid grid-cols-4 gap-4">
+    <div class="border bg-slate-100 rounded-md shadow p-5">
+      
+      <form method="GET" action="" class="relative mb-5" >
+        <input type="text" placeholder="Search title..." name="search" value="{{search_input}}" class="w-full border-none rounded-md"/>
+        <input type="submit" value="Search" class=" font-semibold text-gray-600 rounded-r-md p-2 bg-green-200 hover:bg-green-300 cursor-pointer absolute right-0"/>
       </form>
+   
 
+      <h3 class="text-lg font-semibold text-gray-500 mb-5">FILTER TASKS</h3>
       <ul>
-        <li>Creation date</li>
-        <li>Due date</li>
-        <li>Priority</li>
-        <li>completed</li>
-      </ul>
+        <a href="{% url 'tasks' %}"><li class="bg-green-200 rounded-md  px-2 p-1 mb-3 text-gray-600 font-semibold shadow hover:bg-green-300">All</li></a>
+        <a href="{% url 'tasks' %}?q=creation_date"><li class="bg-green-200 rounded-md  px-2 p-1 mb-3 text-gray-600 font-semibold shadow hover:bg-green-300">Creation date</li></a>
+        <a href="{% url 'tasks' %}?q=due_data"><li class="bg-green-200 rounded-md  px-2 p-1 mb-3 text-gray-600 font-semibold shadow hover:bg-green-300">Due date</li></a>
+        <a href="{% url 'tasks' %}?q=Low"><li class="bg-green-200 rounded-md  px-2 p-1 mb-3 text-gray-600 font-semibold shadow hover:bg-green-300">Priority - Low</li></a>
+        <a href="{% url 'tasks' %}?q=Medium"><li class="bg-green-200 rounded-md  px-2 p-1 mb-3 text-gray-600 font-semibold shadow  hover:bg-green-300">Priority - Medium</li></a>
+        <a href="{% url 'tasks' %}?q=High"><li class="bg-green-200 rounded-md  px-2 p-1 mb-3 text-gray-600 font-semibold shadow  hover:bg-green-300">Priority - High</li></a>
+        <a href="{% url 'tasks' %}?q=completed"><li class="bg-green-200 rounded-md  px-2 p-1 mb-3 text-gray-600 font-semibold shadow hover:bg-green-300">Completed</li></a>
+      </ul> 
     </div>
 
-    <div class="col-span-2 flex justify-end">
-      <div class="flex flex-wrap">
+    <div class="col-span-3 ml-10 bg-slate-100 border rounded-md shadow p-5">
+      <div class="flex justify-between">
+        <h1 class="text-2xl font-semibold text-gray-600 mb-5">My tasks</h1>
+        <a href="{% url 'create-task' %}" >
+          <h1 class="border p-2 rounded-md hover:bg-green-200 font-semibold text-gray-600 bg-white">Add Task</h1>
+        </a>
+      </div>
+      <div class="">
         {% for task in tasks %}
         <a href="{% url 'task' task.id %}">
           <div
-            class="border rounded-md p-5 text-gray-600 font-semibold mb-5 hover:bg-green-100 cursor-pointer w-64 ml-4"
+            class="border rounded-md p-5 text-gray-600 font-semibold mb-5 bg-white hover:bg-green-100 cursor-pointer shadow flex items-center"
           >
-            <label class="bg-green-400 rounded-full px-3 py-1 text-white"
-              >{{task.completed}}</label
-            >
-            <h1 class="text-xl font-bold text-gray-600 mt-5">{{task.title}}</h1>
-            <h4 class="text-sm text-gray-400">{{task.due_date}}</h4>
+          <span class=" mr-5 text-xl {% if task.is_complete %} text-green-400 {% else %} text-gray-400 {% endif %}">&#9679;</span>
+          <div>
+            <h1 class="text-2xl font-bold text-gray-600 {% if task.is_complete %} italic line-through {% endif %}">{{task.title}}</h1>
+            <h4 class="text-sm text-gray-400">Due: {{task.due_date}}</h4>
+          </div>
           </div></a
         >
         {% empty %}
-        <div>No data</div>
+        <p class=" font-semibold text-gray-600">No results found for the search query!</p>
         {% endfor %}
       </div>
     </div>

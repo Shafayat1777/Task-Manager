@@ -45,6 +45,17 @@ class TaskList(LoginRequiredMixin, ListView):
         context = super().get_context_data(**kwargs)
         context['tasks'] = context['tasks'].filter(user=self.request.user)
 
+        ftr = self.request.GET.get('q') or ''
+        if ftr:
+            if ftr == 'creation_date':
+                context['tasks'] = context['tasks'].order_by('-created')
+            elif ftr == 'due_date':
+                context['tasks'] = context['tasks'].order_by('-due_date')
+            elif ftr == 'completed':
+                context['tasks'] = context['tasks'].filter(is_complete=True)
+            else:
+                context['tasks'] = context['tasks'].filter(priority__iexact=ftr)
+
         search_input = self.request.GET.get('search') or ''
         if search_input:
             context['tasks'] = context['tasks'].filter(title__startswith=search_input)
