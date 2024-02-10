@@ -1,8 +1,20 @@
-<h1>Login</h1>
+{% extends 'index.html' %} {% block body %} {% load widget_tweaks %}
+<div class="flex justify-center items-center">
+  <div class="border bg-slate-100 rounded-md shadow p-5 mt-10 flex flex-col justify-center items-center w-[400px]">
+    <h1 class="text-3xl font-semibold text-gray-600 mb-10">Login</h1>
 
-<form method="POST">
-  {% csrf_token%} {{form.as_p}}
-  <input type="submit" value="Login" class="border" />
-</form>
+    <form method="POST" class="flex flex-col mb-10">
+      {% csrf_token%} 
+      
+      <label class="text-xl font-semibold text-gray-600 mb-1">Username</label>
+      {{form.username | add_class:"border-none rounded-md mb-2 text-gray-600 font-semibold"}}
 
-<p>Dont have an account? <a href="{% url 'register' %}">Register now!</a></p>
+      <label class="text-xl font-semibold text-gray-600 mb-1">Password</label>
+      {{form.password | add_class:"border-none rounded-md mb-2 text-gray-600 font-semibold"}}
+      <input type="submit" value="Login" class="border p-2 rounded-md hover:bg-green-200 font-semibold text-gray-600 bg-white cursor-pointer mt-5" />
+    </form>
+
+    <p class="text-gray-600">Dont have an account? <a href="{% url 'register' %}" class="text-blue-400">Register now!</a></p>
+  </div>
+</div>
+{% endblock %}

@@ -1,13 +1,5 @@
-{% load static tailwind_tags %}
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Task Manager</title>
-    {% tailwind_css %}
-  </head>
-  <body class="px-28 py-10">
+{% extends 'index.html' %} {% block body %}
+  <body class=" px-10 lg:px-28 py-10">
     {% include 'navbar.html' %} {% block content %} {% endblock %}
   </body>
-</html>
+  {% endblock  %}

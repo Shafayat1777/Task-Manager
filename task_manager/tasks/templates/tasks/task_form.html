@@ -1,10 +1,24 @@
-{% extends 'main.html' %} {% block content %}
-{% load widget_tweaks %}
-<div>
-  <form method="POST" action="">{%csrf_token%}
-    {{form.as_p}}
-    
-    <input type="submit" value="Add" class="border">
+{% extends 'main.html' %} {% block content %} {% load widget_tweaks %}
+<div class="border bg-slate-100 rounded-md shadow p-5 mt-10 flex justify-center items-center">
+  <form method="POST" action="" enctype="multipart/form-data" class="flex flex-col w-full sm:w-96">
+    {%csrf_token%} 
+
+    <label class="text-xl font-semibold text-gray-600 mb-1">Title</label>
+    {{form.title | add_class:"border-none rounded-md mb-2 text-gray-600 font-semibold"}}
+
+    <label class="text-xl font-semibold text-gray-600 mb-1">Description</label>
+    {{form.description | add_class:"border-none rounded-md mb-2 text-gray-600 font-semibold"}}
+
+    <label class="text-xl font-semibold text-gray-600 mb-1">Set priority</label>
+    {{form.priority | add_class:"border-none rounded-md mb-2 text-gray-600 font-semibold"}}
+
+    <label class="text-xl font-semibold text-gray-600 mb-1">Due date</label>
+    {{form.due_date | add_class:"border-none rounded-md mb-2 text-gray-600 font-semibold"}}
+
+
+    <label class="text-xl font-semibold text-gray-600 mb-1">Upload images</label>
+    <input type="file" multiple name="images" />
+    <input type="submit" value="Add" class="border p-2 rounded-md hover:bg-green-200 font-semibold text-gray-600 bg-white cursor-pointer mt-5" />
   </form>
 </div>
 {%endblock%}

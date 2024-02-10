@@ -24,6 +24,9 @@ class Task(models.Model):
 
     class Meta:
         ordering = ['-priority']
-# class Image(models.Model):
-#     task = models.ForeignKey(Task, on_delete=models.CASCADE)
-#     image = models.ImageField()
+
+
+class Image(models.Model):
+    task = models.ForeignKey(Task, on_delete=models.CASCADE, null=True, blank=True)
+    image = models.ImageField(null=False, blank=False)
+   

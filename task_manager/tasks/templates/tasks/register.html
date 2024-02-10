@@ -1,8 +1,24 @@
-<h1>Register</h1>
+{% extends 'index.html' %} {% block body %} {% load widget_tweaks %}
 
-<form method="POST">
-  {% csrf_token%} {{form.as_p}}
-  <input type="submit" value="Register" class="border" />
-</form>
+<div class="flex justify-center items-center">
+  <div class="border bg-slate-100 rounded-md shadow p-5 mt-10 flex flex-col justify-center items-center w-[400px]">
 
-<p>Already have an account? <a href="{% url 'login' %}">Login</a></p>
+    <h1 class="text-3xl font-semibold text-gray-600 mb-10">Register</h1>
+
+    <form method="POST" class="flex flex-col mb-10">
+      {% csrf_token%} 
+      <label class="text-xl font-semibold text-gray-600 mb-1">Username</label>
+      {{form.username | add_class:"border-none rounded-md mb-2 text-gray-600 font-semibold"}}
+
+      <label class="text-xl font-semibold text-gray-600 mb-1">Password</label>
+      {{form.password1 | add_class:"border-none rounded-md mb-2 text-gray-600 font-semibold"}}
+
+      <label class="text-xl font-semibold text-gray-600 mb-1">Confirm password</label>
+      {{form.password2 | add_class:"border-none rounded-md mb-2 text-gray-600 font-semibold"}}
+      <input type="submit" value="Register" class="border p-2 rounded-md hover:bg-green-200 font-semibold text-gray-600 bg-white cursor-pointer mt-5" />
+    </form>
+
+    <p class="text-gray-600">Already have an account? <a href="{% url 'login' %}" class="text-blue-400">Login</a></p>
+  </div>
+</div>
+{% endblock %}
